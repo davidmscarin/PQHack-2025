@@ -21,7 +21,7 @@ def estimate_value():
     # circuit with 1 qubit
     n_qubits = 2
 
-    fm = kron(8*RX(0, FeatureParameter("x")), RX(1, 16*FeatureParameter("x")))
+    fm = kron(RX(0, 8*FeatureParameter("x")), RX(1, 16*FeatureParameter("x")))
 
     # create ansazts
     ansatz = kron(RX(0, VariationalParameter("phi1")), RX(1, VariationalParameter("phi2")))
