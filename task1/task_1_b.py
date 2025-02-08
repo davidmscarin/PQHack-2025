@@ -9,25 +9,27 @@ from qadence.parameters import VariationalParameter
 
 from qadence.operations.primitive import Y
 
+from qadence.states import normalize
+
 # estimate the value used to generate the data in data/dataset_1_a.txt
 def estimate_value():
     # Load the data
-    x_train, y_train = load_txt("../data/dataset_1_a.txt")
+    x_train, y_train = load_txt("../data/dataset_1_b.txt")
 
     x_train, y_train = torch.tensor(x_train), torch.tensor(y_train)
 
     # circuit with 1 qubit
-    n_qubits = 1
+    n_qubits = 2
 
-    fm = RX(0, FeatureParameter("x"))
+    fm = kron(RX(0, FeatureParameter("x")), RX(1, 2*FeatureParameter("x")))
 
     # create ansazts
-    ansatz = RX(0, VariationalParameter("phi"))
+    ansatz = kron(RX(0, VariationalParameter("phi1")), RX(1, VariationalParameter("phi2")))
     block = chain(fm, ansatz)
 
     # create circuit
     circuit = QuantumCircuit(n_qubits, block)
-    obs = add(Y(i) for i in range(n_qubits))
+    obs = 1/2*(add(Z(i) for i in range(n_qubits)))
 
     # create model
     model = QuantumModel(circuit, observable = obs)
@@ -47,8 +49,6 @@ def estimate_value():
 
     n_epochs = 100
 
-    n_epochs = 100
-
     for epoch in range(n_epochs):
         optimizer.zero_grad()
         loss = loss_fn(x_train, y_train)
@@ -57,18 +57,21 @@ def estimate_value():
     
     y_pred_final = model.expectation({"x": x_train}).squeeze().detach()
 
+    phi1 = model.vparams["phi1"].item()
+    phi2 = model.vparams["phi2"].item()
+
     plt.plot(x_train, y_pred_initial, label = "Initial prediction")
     plt.plot(x_train, y_pred_final, label = "Final prediction")
     plt.scatter(x_train, y_train, label = "Training points")
     plt.xlabel("x")
     plt.ylabel("f(x)")
     plt.legend()
-    plt.title("phi = " + str(model.vparams["phi"].item()))
+    plt.title("phi1 = " + str(phi1) + ", phi2 = " + str(phi2))
     plt.xlim((-1, 8))
     plt.ylim((-2, 2))
     plt.show()
 
-    return model.vparams["phi"].item()
+    return phi1, phi2
 
 
 print(estimate_value())
