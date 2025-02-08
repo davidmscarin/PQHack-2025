@@ -1,9 +1,13 @@
 from qadence import Register, FeatureParameter, chain
-from qadence import hea, AnalogRX, AnalogRY, AnalogRZ, AnalogInteraction, QuantumModel, QuantumCircuit, kron, RX, RY, RZ, Interaction, Z, add
+from qadence import hea, AnalogRX, AnalogRY, AnalogRZ, AnalogInteraction, QuantumModel, QuantumCircuit, kron, RX, RY, RZ, Interaction, Z, add, X
 import torch
 import numpy as np
 from load import load_txt
 import matplotlib.pyplot as plt
+
+from qadence.parameters import VariationalParameter
+
+from qadence.operations.primitive import Y
 
 # estimate the value used to generate the data in data/dataset_1_a.txt
 def estimate_value():
@@ -15,12 +19,11 @@ def estimate_value():
     # circuit with 1 qubit
     n_qubits = 1
 
-    x = FeatureParameter("x")
-    fm = kron(RX(i, x) for i in range(n_qubits))
+    fm = RZ(0, FeatureParameter("x"))
 
     # create ansazts
-    ansatz = hea(n_qubits, depth = 2)
-    block = fm * ansatz
+    ansatz = RZ(0, VariationalParameter("phi"))
+    block = chain(fm, ansatz)
 
     # create circuit
     circuit = QuantumCircuit(n_qubits, block)
@@ -60,8 +63,9 @@ def estimate_value():
     plt.xlabel("x")
     plt.ylabel("f(x)")
     plt.legend()
-    plt.xlim((-1.1, 1.1))
-    plt.ylim((-0.1, 1.1))
+    plt.xlim((-10, 10))
+    plt.ylim((-10, 10))
+    plt.show()
 
 
 estimate_value()
