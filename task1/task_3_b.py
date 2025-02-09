@@ -83,8 +83,13 @@ def estimate_value():
     plt.ylim((-5, 5))
     plt.show()
 
-    return
+    test_data = np.loadtxt("../data/dataset_3_test.txt")
+    #get predicted values on test data
+    x_pred_test = model.expectation({"x": torch.tensor(test_data)}).squeeze().detach()
+    #create csv with test, predicted values
+    np.savetxt("solution_3_b.csv", np.column_stack((test_data, x_pred_test)), delimiter=",", header="x, f(x)", comments="", fmt="%f")
 
+    return
 
 print(estimate_value())
 
