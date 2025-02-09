@@ -135,6 +135,14 @@ def estimate_value():
     plt.colorbar()
     plt.show()
 
+    test_data = np.loadtxt("../data/dataset_4_test.txt")
+    x_test = test_data[:, 0]
+    y_test = test_data[:, 1]
+    #get predicted values on test data
+    x_pred_test = model.expectation({"x": torch.tensor(x_test), "y": torch.tensor(y_test)}).squeeze().detach()
+    #create csv with x, y, predicted values
+    np.savetxt("solution_4.csv", np.column_stack((x_test, y_test, x_pred_test)), delimiter=",", header="x, y, f(x, y)", comments="", fmt="%f")
+
     return
 
 
