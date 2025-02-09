@@ -4,6 +4,7 @@ import torch
 import numpy as np
 from load import load_txt
 import matplotlib.pyplot as plt
+import math
 
 from qadence.parameters import VariationalParameter
 
@@ -32,13 +33,12 @@ def estimate_value():
     x_values = torch.tensor(x_values)
 
     # circuit with 1 qubit
-    n_qubits = 6
-    depth = 10
+    n_qubits = 1
 
-    fm = kron(RX(i, FeatureParameter("x")**(i+1)) for i in range(n_qubits))
+    fm = kron(RX(0, math.sqrt(k) * FeatureParameter("x")))
 
     # create ansazts
-    ansatz = chain(hea(n_qubits, depth))
+    ansatz = chain(RX(0, VariationalParameter("phi")))
     block = chain(fm, ansatz)
 
     # create circuit
@@ -48,7 +48,6 @@ def estimate_value():
     # create model
     model = QuantumModel(circuit, observable = obs)
     x_pred_initial = model.expectation({"x": t_values}).squeeze().detach()
-    print(x_pred_initial)
 
     # training loop
 
@@ -71,16 +70,16 @@ def estimate_value():
     
     x_pred_final = model.expectation({"x": t_values}).squeeze().detach()
 
-    plt.plot(t_values, x_pred_initial, label = "Initial prediction")
-    plt.plot(t_values, x_pred_final, label = "Final prediction")
-    plt.scatter(t_values, x_values, label = "Training points")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.legend()
-    plt.title("phi1 = ")
-    plt.xlim((-1, 15))
-    plt.ylim((-5, 5))
-    plt.show()
+    # plt.plot(t_values, x_pred_initial, label = "Initial prediction")
+    # plt.plot(t_values, x_pred_final, label = "Final prediction")
+    # plt.scatter(t_values, x_values, label = "Training points")
+    # plt.xlabel("x")
+    # plt.ylabel("f(x)")
+    # plt.legend()
+    # plt.title("phi1 = ")
+    # plt.xlim((-1, 15))
+    # plt.ylim((-5, 5))
+    # plt.show()
 
     test_data = np.loadtxt("../data/dataset_3_test.txt")
     #get predicted values on test data
@@ -88,8 +87,6 @@ def estimate_value():
     #create csv with test, predicted values
     np.savetxt("solution_3_a.csv", np.column_stack((test_data, x_pred_test)), delimiter=",", header="x, f(x)", comments="", fmt="%f")
 
-    return
 
-
-print(estimate_value())
+estimate_value()
 

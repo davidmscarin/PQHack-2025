@@ -32,7 +32,6 @@ def estimate_value():
     # create model
     model = QuantumModel(circuit, observable = obs)
     y_pred_initial = model.expectation({"x": x_train}).squeeze().detach()
-    print(y_pred_initial)
 
     # training loop
 
@@ -47,8 +46,6 @@ def estimate_value():
 
     n_epochs = 100
 
-    n_epochs = 100
-
     for epoch in range(n_epochs):
         optimizer.zero_grad()
         loss = loss_fn(x_train, y_train)
@@ -57,19 +54,19 @@ def estimate_value():
     
     y_pred_final = model.expectation({"x": x_train}).squeeze().detach()
 
-    plt.plot(x_train, y_pred_initial, label = "Initial prediction")
-    plt.plot(x_train, y_pred_final, label = "Final prediction")
-    plt.scatter(x_train, y_train, label = "Training points")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.legend()
-    plt.title("phi = " + str(model.vparams["phi"].item()))
-    plt.xlim((-1, 8))
-    plt.ylim((-2, 2))
-    plt.show()
+    # plt.plot(x_train, y_pred_initial, label = "Initial prediction")
+    # plt.plot(x_train, y_pred_final, label = "Final prediction")
+    # plt.scatter(x_train, y_train, label = "Training points")
+    # plt.xlabel("x")
+    # plt.ylabel("f(x)")
+    # plt.legend()
+    # plt.title("phi = " + str(model.vparams["phi"].item()))
+    # plt.xlim((-1, 8))
+    # plt.ylim((-2, 2))
+    # plt.show()
 
-    return model.vparams["phi"].item()
+    return print(f"phi: {model.vparams["phi"].item()}")
 
 
-print(estimate_value())
+estimate_value()
 

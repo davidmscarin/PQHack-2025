@@ -34,7 +34,6 @@ def estimate_value():
     # create model
     model = QuantumModel(circuit, observable = obs)
     y_pred_initial = model.expectation({"x": x_train}).squeeze().detach()
-    print(y_pred_initial)
 
     # training loop
 
@@ -60,19 +59,19 @@ def estimate_value():
     phi1 = model.vparams["phi1"].item()
     phi2 = model.vparams["phi2"].item()
 
-    plt.plot(x_train, y_pred_initial, label = "Initial prediction")
-    plt.plot(x_train, y_pred_final, label = "Final prediction")
-    plt.scatter(x_train, y_train, label = "Training points")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.legend()
-    plt.title("phi1 = " + str(phi1) + ", phi2 = " + str(phi2))
-    plt.xlim((-1, 8))
-    plt.ylim((-2, 2))
-    plt.show()
+    # plt.plot(x_train, y_pred_initial, label = "Initial prediction")
+    # plt.plot(x_train, y_pred_final, label = "Final prediction")
+    # plt.scatter(x_train, y_train, label = "Training points")
+    # plt.xlabel("x")
+    # plt.ylabel("f(x)")
+    # plt.legend()
+    # plt.title("phi1 = " + str(phi1) + ", phi2 = " + str(phi2))
+    # plt.xlim((-1, 8))
+    # plt.ylim((-2, 2))
+    # plt.show()
 
-    return phi1, phi2
+    print(f"phi1 = {phi1}, phi2 = {phi2}")
 
 
-print(estimate_value())
+estimate_value()
 

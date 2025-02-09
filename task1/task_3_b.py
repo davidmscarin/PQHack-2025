@@ -33,7 +33,7 @@ def estimate_value():
     x_values = torch.tensor(x_values)
 
     # circuit with 1 qubit
-    n_qubits = 6
+    n_qubits = 5
     depth = 10
 
     fm = kron(RX(i, FeatureParameter("x")**(i+1)) for i in range(n_qubits))
@@ -49,7 +49,6 @@ def estimate_value():
     # create model
     model = QuantumModel(circuit, observable = obs)
     x_pred_initial = model.expectation({"x": t_values}).squeeze().detach()
-    print(x_pred_initial)
 
     # training loop
 
@@ -91,5 +90,5 @@ def estimate_value():
 
     return
 
-print(estimate_value())
+estimate_value()
 
