@@ -73,17 +73,23 @@ def estimate_value():
 
     y_pred_final = model.expectation({"x": x_train}).squeeze().detach()
 
-    plt.plot(x_train, y_pred_initial, label = "Initial prediction")
-    plt.plot(x_train, y_pred_final, label = "Final prediction")
-    plt.scatter(x_train, y_train, label = "Training points")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.legend()
-    plt.title("phi1 = ")
-    plt.xlim((-1, 8))
-    plt.ylim((-2, 2))
-    plt.show()
+    # plt.plot(x_train, y_pred_initial, label = "Initial prediction")
+    # plt.plot(x_train, y_pred_final, label = "Final prediction")
+    # plt.scatter(x_train, y_train, label = "Training points")
+    # plt.xlabel("x")
+    # plt.ylabel("f(x)")
+    # plt.legend()
+    # plt.title("phi1 = ")
+    # plt.xlim((-1, 8))
+    # plt.ylim((-2, 2))
+    # plt.show()
 
+    #create csv with test, prediction
+    data = np.loadtxt("../data/dataset_2_c_test.txt")
+    x_test = data[:, 0]
+    y_test = data[:, 1]
+    pred = model.expectation({"x": torch.tensor(x_test)}).squeeze().detach()
+    np.savetxt("solution_2_c.csv", pred.numpy(), delimiter=",")
 
-print(estimate_value())
+estimate_value()
 

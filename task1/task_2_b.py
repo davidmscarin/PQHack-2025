@@ -45,7 +45,6 @@ def estimate_value():
     # create model
     model = QuantumModel(circuit, observable = obs)
     y_pred_initial = model.expectation({"x": x_train}).squeeze().detach()
-    print(y_pred_initial)
 
     # training loop
 
@@ -85,8 +84,8 @@ def estimate_value():
     phi = model.vparams["phi"].item()*n_shards
     A = model.vparams["A"].item()
 
-    return f, phi, A
+    print(f"f = {f}, phi = {phi}, A = {A}")
 
 
-print(estimate_value())
+estimate_value()
 
